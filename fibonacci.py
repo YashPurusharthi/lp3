@@ -1,20 +1,37 @@
-def calculate_fibonacci_series(n):
-    a, b = 0, 1
-    step_count = 0
-    fibonacci_series = []
+def fibonacci_non_recursive(n):
+    if n <= 0:
+        return [0]
+    
+    fibonacci_series = [0, 1]
 
-    for i in range(n):
-        step_count += 1
-        fibonacci_series.append(a)
-        a, b = b, a+b
+    while True:
+        next_fib = fibonacci_series[-1] + fibonacci_series[-2]
+        if len(fibonacci_series) <= n:
+            fibonacci_series.append(next_fib)
+        else:
+            break
 
-    return fibonacci_series, step_count
+    return fibonacci_series
 
-# Input from the user
-n = int(input("Enter the number of terms in the Fibonacci series: "))
+def fibonacci_recursive(n):
+    if n <= 0:
+        return [0]
+    elif n == 1:
+        return [0, 1]
 
-# Calculate the Fibonacci series and step count
-fibonacci_series, step_count = calculate_fibonacci_series(n)
+    series = fibonacci_recursive(n - 1)
+    series.append(series[-1] + series[-2])
+    return series
 
-print(f"Fibonacci Series for the first {n} terms: {fibonacci_series}")
-print(f"Step count: {step_count}")
+# Get input from the user
+n = int(input("Enter the value of n: "))
+
+# Calculate and print the Fibonacci series up to n using the non-recursive method
+series_nr = fibonacci_non_recursive(n)
+print("Fibonacci series (non-recursive):")
+print(series_nr)
+
+# Calculate and print the Fibonacci series up to n using the recursive method
+series_r = fibonacci_recursive(n)
+print("Fibonacci series (recursive):")
+print(series_r)
