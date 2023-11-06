@@ -1,63 +1,57 @@
-import matplotlib as plot
+import matplotlib.pyplot as plt
 import numpy as np
-import sympy as sym       #Lib for Symbolic Math
 from matplotlib import pyplot
 
-def objective(x):
-  return (x+3)**2
+current_x = 2
+rate = 0.01 # Learning rate
+precision = 0.000001  # This tells us when to stop the algorithm
+delta_x = 1
+max_iterations = 10000 # Maximum number of iterations
+iteration_counter = 0
 
-def derivative(x):
-  return 2*(x + 3)
+# dy/dx of eqn = 2*(x+3)
+def slope(x):
+    return 2*(x+3)
 
-def gradient_descent(alpha, start, max_iter):
-  x_list = list()
-  x= start;
-  x_list.append(x)
-  for i in range(max_iter):
-    gradient = derivative(x);
-    x = x - (alpha*gradient);
-    x_list.append(x);
-  return x_list
+def value_y(x):
+    return (x+3)**2
+y = []
+x = []
+y.append(value_y(current_x))
+x.append(current_x)
 
-x = sym.symbols('x')
-expr = (x+3)**2.0;
-grad = sym.Derivative(expr,x)
-print("{}".format(grad.doit()) )
-grad.doit().subs(x,2)
+# Generate x values
+xi = np.linspace(-8, 2)  # Adjust the range as needed
 
-def gradient_descent1(expr,alpha, start, max_iter):
-  x_list = list()
-  x = sym.symbols('x')
-  grad = sym.Derivative(expr,x).doit()  
-  x_val= start;
-  x_list.append(x_val)
-  for i in range(max_iter):
-    gradient = grad.subs(x,x_val);
-    x_val = x_val - (alpha*gradient);
-    x_list.append(x_val);
-  return x_list
+# Calculate y values for the curve
+yi = (xi + 3)**2
 
-alpha = 0.1       #Step_size
-start = 2         #Starting point
-max_iter = 30     #Limit on iterations
-x = sym.symbols('x')
-expr = (x+3)**2;   #target function
+# Create the plot
+plt.plot(xi, yi)
 
-x_cordinate = np.linspace(-15,15,100)
-pyplot.plot(x_cordinate,objective(x_cordinate))
-pyplot.plot(2,objective(2),'ro')
+# Add labels and a title
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
+plt.title("Curve: y = (x + 3)^2")
 
-X = gradient_descent(alpha,start,max_iter)
-x_cordinate = np.linspace(-5,5,100)
-pyplot.plot(x_cordinate,objective(x_cordinate))
-X_arr = np.array(X)
-pyplot.plot(X_arr, objective(X_arr), '.-', color='red')
-pyplot.show()
+# Display the plot
+plt.grid(True)  # Add grid lines if desired
+plt.show()
 
-X= gradient_descent1(expr,alpha,start,max_iter)
-X_arr = np.array(X)
-x_cordinate = np.linspace(-5,5,100)
-pyplot.plot(x_cordinate,objective(x_cordinate))
-X_arr = np.array(X)
-pyplot.plot(X_arr, objective(X_arr), '.-', color='red')
-pyplot.show()
+while delta_x > precision and iteration_counter < max_iterations:
+    previous_x = current_x
+    current_x = previous_x - rate * slope(previous_x)
+    y.append(value_y(current_x))
+    x.append(current_x)
+    delta_x = abs(previous_x - current_x)
+    print(f"Iteration {iteration_counter+1}")
+    iteration_counter += 1
+    print(f"X = {current_x}")
+
+print(f"Local Minima occurs at: {current_x}")
+
+pyplot.plot(x,y,'.-')
+plt.xlabel('x-values')
+plt.ylabel('y-values')
+plt.title('y=(x+3)^2')
+plt.show()
